@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
+    "serve": "react-scripts start",
     "build": "react-scripts build",
     "postinstall": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
@@ -24,6 +25,7 @@
     "mongoose": "5.0.8",
     "passport": "^0.4.0",
     "react": "^16.2.0",
+    "react-bootstrap": "^0.32.1",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1",
     "string-template": "^1.0.0",
