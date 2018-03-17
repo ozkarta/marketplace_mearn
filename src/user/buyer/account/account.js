@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Account extends React.Component {
+class BuyerAccount extends React.Component {
     constructor(props) {
         super(props);
         this.state = props;
@@ -13,4 +13,4 @@ class Account extends React.Component {
     }
 }
 
-export default Account;
+export default BuyerAccount;

@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter as Router} from "react-router-dom";
 
 import ErrorModal from './shared/error-modal/error-modal';
 
 import VisitorMainComponent from './user/visitor/visitor';
+import VisitorRoutes from './user/visitor/visitor-routes';
+
 import SellerMainComponent from './user/seller/seller';
+import SellerRoutes from './user/seller/seller-routes';
+
 import BuyerMainComponent from './user/buyer/buyer';
+import BuyerRoutes from './user/buyer/buyer-routes';
 import './index.css';
 
 class App extends React.Component {
@@ -20,7 +26,7 @@ class App extends React.Component {
             user: {
                 role: 'buyer',
                 user: {},
-                isSignedIn: false
+                isSignedIn: true
             }
         };
     }
@@ -32,16 +38,23 @@ class App extends React.Component {
     render() {
         return (
             <React.Fragment>
-                
-                {
-                    !this.state.user.isSignedIn && <VisitorMainComponent/>                    
-                }
-                {
-                    this.state.user.isSignedIn && this.state.user.role === 'seller' && <SellerMainComponent/>
-                }
-                {
-                    this.state.user.isSignedIn && this.state.user.role === 'buyer' && <BuyerMainComponent/>
-                }
+                <Router>
+                    <div>
+                        {
+                            !this.state.user.isSignedIn && <VisitorMainComponent/>                    
+                        }
+                        {
+                            this.state.user.isSignedIn && this.state.user.role === 'seller' && <SellerMainComponent/>
+                        }
+                        {
+                            this.state.user.isSignedIn && this.state.user.role === 'buyer' && <BuyerMainComponent/>
+                        }
+
+                        <VisitorRoutes/>
+                        <SellerRoutes/>
+                        <BuyerRoutes/>
+                    </div>
+                </Router>
 
                 {this.state.error.hasError && <ErrorModal error={this.state.error.error} errorInfo={this.state.error.errorInfo} />}
             </React.Fragment>

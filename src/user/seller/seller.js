@@ -1,11 +1,6 @@
 import React from 'react';
-import {BrowserRouter as Router, Route} from "react-router-dom";
-
 
 import NavigationBar from '../../shared/navbar/navbar';
-import Home from './home/home';
-import Account from './account/account';
-import BusinessProfile from './business-profile/business-profile';
 class SellerMainComponent extends React.Component {
     // Navbar Router Links on the left
     navbarProps = {
@@ -30,18 +25,12 @@ class SellerMainComponent extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Router>
-                    <div>
-                        <NavigationBar {...this.navbarProps} />
-
-                        <Route exact path="/seller" component={Home} />
-                        <Route path="/seller/account" component={Account} />
-                        <Route path="/seller/business-profile" component={BusinessProfile} />
-                    </div>
-                </Router>
+                <NavigationBar {...this.navbarProps} />
             </React.Fragment>
         );
     }
 }
+
+
 
 export default SellerMainComponent;

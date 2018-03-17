@@ -1,11 +1,7 @@
 import React from 'react';
-import {BrowserRouter as Router, Route} from "react-router-dom";
-
 
 import NavigationBar from '../../shared/navbar/navbar';
-import Home from './home/home';
-import Account from './account/account';
-import Profile from './profile/profile';
+
 class BuyerMainComponent extends React.Component {
     // Navbar Router Links on the left
     navbarProps = {
@@ -30,15 +26,7 @@ class BuyerMainComponent extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <Router>
-                    <div>
-                        <NavigationBar {...this.navbarProps} />
-
-                        <Route exact path="/buyer" component={Home} />
-                        <Route path="/buyer/account" component={Account} />
-                        <Route path="/buyer/profile" component={Profile} />
-                    </div>
-                </Router>
+                <NavigationBar {...this.navbarProps} />
             </React.Fragment>
         );
     }

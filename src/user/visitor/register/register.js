@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Register extends React.Component {
+class VisitorRegister extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,4 +15,4 @@ class Register extends React.Component {
     }
 }
 
-export default Register;
+export default VisitorRegister;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Home extends React.Component {
+class SellerHome extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,4 +15,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default SellerHome;

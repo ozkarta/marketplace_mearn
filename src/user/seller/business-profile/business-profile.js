@@ -1,6 +1,6 @@
 import React from 'react';
 
-class BusinessProfile extends React.Component {
+class SellerBusinessProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = props;
@@ -13,4 +13,4 @@ class BusinessProfile extends React.Component {
     }
 }
 
-export default BusinessProfile;
+export default SellerBusinessProfile;
