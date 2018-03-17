@@ -2,16 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router} from "react-router-dom";
 
-import ErrorModal from './shared/error-modal/error-modal';
+import Routes from './shared/routes';
 
 import VisitorMainComponent from './user/visitor/visitor';
-import VisitorRoutes from './user/visitor/visitor-routes';
 
 import SellerMainComponent from './user/seller/seller';
-import SellerRoutes from './user/seller/seller-routes';
 
 import BuyerMainComponent from './user/buyer/buyer';
-import BuyerRoutes from './user/buyer/buyer-routes';
+
+import ErrorModal from './shared/error-modal/error-modal';
 import './index.css';
 
 class App extends React.Component {
@@ -26,7 +25,7 @@ class App extends React.Component {
             user: {
                 role: 'buyer',
                 user: {},
-                isSignedIn: true
+                isSignedIn: false
             }
         };
     }
@@ -50,9 +49,8 @@ class App extends React.Component {
                             this.state.user.isSignedIn && this.state.user.role === 'buyer' && <BuyerMainComponent/>
                         }
 
-                        <VisitorRoutes/>
-                        <SellerRoutes/>
-                        <BuyerRoutes/>
+                       <Routes/>
+
                     </div>
                 </Router>
 
@@ -61,7 +59,6 @@ class App extends React.Component {
         );
     }
 }
-
 
 ReactDOM.render(
     <App />,
