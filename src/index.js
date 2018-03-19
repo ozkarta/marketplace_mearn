@@ -49,7 +49,7 @@ class App extends React.Component {
                             this.state.user.isSignedIn && this.state.user.role === 'buyer' && <BuyerMainComponent/>
                         }
 
-                       <Routes/>
+                       <Routes state={this.state}/>
 
                     </div>
                 </Router>
