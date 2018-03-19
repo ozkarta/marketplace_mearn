@@ -144,11 +144,11 @@ class GenerateSwitch extends React.Component {
         return (
             <React.Fragment>
                 <Switch>
-                    {this.state.routeConfig.map(routeItem => {
+                    {this.state.routeConfig.map((routeItem, i) => {
                         let route = Object.assign({}, routeItem.route);
                         delete route.component;
 
-                        return (<Route key={`${routeItem.routeUserRole}_${routeItem.route.path}`} 
+                        return (<Route key={`${routeItem.routeUserRole}_${i}_${routeItem.route.path}`} 
                                         {...route} 
                                         render={(props) => this.renderHandler(props, routeItem, routeItem.route.component)}
                                 />);
