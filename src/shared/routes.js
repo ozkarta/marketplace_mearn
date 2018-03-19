@@ -100,10 +100,10 @@ class GenerateSwitch extends React.Component {
             if (!this.state.parentState.user.isAuthenticated) {
                 return (
                     <Redirect
-                            to={{
-                                pathname: "/login",
-                                state: { from: props.location }
-                            }}
+                        to={{
+                            pathname: "/login",
+                            state: { from: props.location }
+                        }}
                     />
                 );
             }
@@ -111,33 +111,34 @@ class GenerateSwitch extends React.Component {
             if (this.state.parentState.user.role !== routeItem.routeUserRole) {
                 return (
                     <Redirect
-                            to={{
-                                pathname: "/login",
-                                state: { from: props.location }
-                            }}
+                        to={{
+                            pathname: "/login",
+                            state: { from: props.location }
+                        }}
                     />
                 );
             }
-            
-        }
-        
-        
-        // Route which require unauthenticated user access
-        if (!routeItem.accessFromAuthenticated) {
-            if (this.state.parentState.user.isAuthenticated) {
-                return (
-                    <Redirect
+
+        } else {
+            // Route which require unauthenticated user access
+            if (!routeItem.accessFromAuthenticated) {
+                if (this.state.parentState.user.isAuthenticated) {
+                    return (
+                        <Redirect
                             to={{
-                                pathname: "/",
+                                pathname: `/${this.state.parentState.user.role}`,
                                 state: { from: props.location }
                             }}
-                    />
-                );
+                        />
+                    );
+                }
             }
         }
+
+
         // Routes which don't require authentication
         // and can be accessed by authenticated users too
-        return (<Component {...props}/>);
+        return (<Component {...props} />);
     }
 
     render() {
@@ -148,10 +149,10 @@ class GenerateSwitch extends React.Component {
                         let route = Object.assign({}, routeItem.route);
                         delete route.component;
 
-                        return (<Route key={`${routeItem.routeUserRole}_${i}_${routeItem.route.path}`} 
-                                        {...route} 
-                                        render={(props) => this.renderHandler(props, routeItem, routeItem.route.component)}
-                                />);
+                        return (<Route key={`${routeItem.routeUserRole}_${i}_${routeItem.route.path}`}
+                            {...route}
+                            render={(props) => this.renderHandler(props, routeItem, routeItem.route.component)}
+                        />);
                     })}
 
                     <Route component={PageNotFound} />

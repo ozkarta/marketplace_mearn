@@ -25,7 +25,7 @@ class App extends React.Component {
             user: {
                 role: 'buyer',
                 user: {},
-                isSignedIn: false
+                isAuthenticated: true
             }
         };
     }
@@ -40,13 +40,13 @@ class App extends React.Component {
                 <Router>
                     <div>
                         {
-                            !this.state.user.isSignedIn && <VisitorMainComponent/>                    
+                            !this.state.user.isAuthenticated && <VisitorMainComponent/>                    
                         }
                         {
-                            this.state.user.isSignedIn && this.state.user.role === 'seller' && <SellerMainComponent/>
+                            this.state.user.isAuthenticated && this.state.user.role === 'seller' && <SellerMainComponent/>
                         }
                         {
-                            this.state.user.isSignedIn && this.state.user.role === 'buyer' && <BuyerMainComponent/>
+                            this.state.user.isAuthenticated && this.state.user.role === 'buyer' && <BuyerMainComponent/>
                         }
 
                        <Routes state={this.state}/>
