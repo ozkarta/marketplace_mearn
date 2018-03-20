@@ -8,7 +8,7 @@ import Routes from './shared/routes';
 import VisitorMainComponent from './user/visitor/visitor';
 import SellerMainComponent from './user/seller/seller';
 import BuyerMainComponent from './user/buyer/buyer';
-import ErrorModal from './shared/error-modal/error-modal';
+import ErrorModal from './shared/components/error-modal/error-modal';
 import './index.css';
 
 const auth = function (state = {user: { role: 'visitor', user: null, isAuthenticated: false }}, action) {

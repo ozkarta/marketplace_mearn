@@ -1,6 +1,6 @@
 import React from 'react';
 
-import NavigationBar from '../../shared/navbar/navbar';
+import NavigationBar from '../../shared/components/navbar/navbar';
 class SellerMainComponent extends React.Component {
     // Navbar Router Links on the left
     navbarProps = {
