@@ -80,7 +80,7 @@ class Routes extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <GenerateSwitch routeConfig={this.routeConfig} parentState={this.state.reduxState} />
+                <GenerateSwitch routeConfig={this.routeConfig} parentState={this.state} />
             </React.Fragment>
         );
     }
