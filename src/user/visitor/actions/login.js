@@ -1,11 +1,14 @@
 
 export function logInUser(role, user, isAuthenticated) {
-    return {
-        type: 'LOGIN',
+    let userToSign = {
         role: role,
         user: user,
         isAuthenticated: isAuthenticated
-    }
+    };
+
+    localStorage.setItem('user', JSON.stringify(userToSign));
+    
+    return Object.assign({type: 'LOGIN'}, userToSign);
 }
 
 export function logOutUser() {

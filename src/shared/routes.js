@@ -78,9 +78,10 @@ class Routes extends React.Component {
     }
 
     render() {
+        console.log('Should rerender...');
         return (
             <React.Fragment>
-                <GenerateSwitch routeConfig={this.routeConfig} parentState={this.state} />
+                <GenerateSwitch routeConfig={this.routeConfig} parentState={this.props} />
             </React.Fragment>
         );
     }
@@ -97,7 +98,7 @@ class GenerateSwitch extends React.Component {
         // Routes with authenticationonly
         // Redirect in other case
         if (routeItem.authRequired) {
-            if (!this.state.parentState.user.isAuthenticated) {
+            if (!this.props.parentState.user.isAuthenticated) {
                 return (
                     <Redirect
                         to={{
@@ -108,7 +109,7 @@ class GenerateSwitch extends React.Component {
                 );
             }
 
-            if (this.state.parentState.user.role !== routeItem.routeUserRole) {
+            if (this.props.parentState.user.role !== routeItem.routeUserRole) {
                 return (
                     <Redirect
                         to={{
@@ -122,11 +123,11 @@ class GenerateSwitch extends React.Component {
         } else {
             // Route which require unauthenticated user access
             if (!routeItem.accessFromAuthenticated) {
-                if (this.state.parentState.user.isAuthenticated) {
+                if (this.props.parentState.user.isAuthenticated) {
                     return (
                         <Redirect
                             to={{
-                                pathname: `/${this.state.parentState.user.role}`,
+                                pathname: `/${this.props.parentState.user.role}`,
                                 state: { from: props.location }
                             }}
                         />
