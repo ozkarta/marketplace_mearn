@@ -37,10 +37,13 @@ class InputForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = Object.assign(
-            {userModel: {
-                email: 'ozbegi1@gmail.com',
-                password: '12qwert12'
-            }}, 
+                {
+                userModel: {
+                    email: 'ozbegi1@gmail.com',
+                    password: '12qwert12'
+                },
+                globalError: ''
+            }, 
             props
         );
         this.logInButtonHandler = this.logInButtonHandler.bind(this);
@@ -48,20 +51,23 @@ class InputForm extends React.Component {
     }
 
     logInButtonHandler(event) {
-        let action = LoginActions.authenticate(this.state.userModel);
-
-        console.dir(action);
-        // let action = LoginActions.logInUser('seller', {}, true);
-        // this.props.dispatch(action);
-        event.preventDefault();
+        LoginActions.authenticate(this.state.userModel)
+            .then(
+                action => {
+                    console.dir(action);
+                    this.props.dispatch(action);
+                }
+            )
+            .catch(error => {
+                this.setState({globalError: error.msg});
+            });
+        event.preventDefault();    
     }
     
     inputValueChangeHandler(model, value) {
         let userModel = this.state.userModel;
         userModel[model] = value;
         this.setState({userModel: userModel});
-
-        console.dir(this.state);
     }
 
     render() {
@@ -86,7 +92,7 @@ class InputForm extends React.Component {
                     </div>
                 </div>
                 
-                <ComponentErrorHandler/>
+                <ComponentErrorHandler errorMessage={this.state.globalError}/>
                 <button className="signin-button" type="submit" name="button"> Sign In</button>
             </form>
         );
@@ -102,7 +108,7 @@ class ComponentErrorHandler extends React.Component {
     render() {
         return (
             <div >
-                {this.state.errorMessage}
+                {this.props.errorMessage}
             </div>
         );
     }

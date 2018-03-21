@@ -1,23 +1,21 @@
 import axios from 'axios';
 
-export function authenticate(user) {
-    axios.post('/api/v1/users/sign-in', user)
-        .then(response => {
-            if (response && response.data && response.data.auth) {
-                let usr = response.data.user;
-                if (!usr) {
-                    return logInUser('visitor', null, null, false);
-                }
-
-                return logInUser(usr.role, usr, response.data.token, response.data.auth)
-            } else {
+export async function authenticate(user) {
+    try {
+        const response =  await axios.post('/api/v1/users/sign-in', user);
+        if (response && response.data && response.data.auth) {
+            let usr = response.data.user;
+            if (!usr) {
                 return logInUser('visitor', null, null, false);
             }
-        })
-        .catch(error => {
-            console.dir(error);
+
+            return logInUser(usr.role, usr, response.data.token, response.data.auth)
+        } else {
             return logInUser('visitor', null, null, false);
-        })
+        }
+    } catch (ex) {
+        throw ex.response.data;
+    }
 }
 
 
