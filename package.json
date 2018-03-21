@@ -35,5 +35,6 @@
     "string-template": "1.0.0",
     "ws": "4.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+  }
 }

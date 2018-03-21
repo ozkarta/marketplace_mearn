@@ -36,27 +36,51 @@ class VisitorLogIn extends React.Component {
 class InputForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = props;
+        this.state = Object.assign(
+            {userModel: {
+                email: 'ozbegi1@gmail.com',
+                password: '12qwert12'
+            }}, 
+            props
+        );
         this.logInButtonHandler = this.logInButtonHandler.bind(this);
+        this.inputValueChangeHandler = this.inputValueChangeHandler.bind(this);
     }
 
     logInButtonHandler(event) {
-        let action = LoginActions.logInUser('seller', {}, true);
-        this.props.dispatch(action);
+        let action = LoginActions.authenticate(this.state.userModel);
+
+        console.dir(action);
+        // let action = LoginActions.logInUser('seller', {}, true);
+        // this.props.dispatch(action);
         event.preventDefault();
+    }
+    
+    inputValueChangeHandler(model, value) {
+        let userModel = this.state.userModel;
+        userModel[model] = value;
+        this.setState({userModel: userModel});
+
+        console.dir(this.state);
     }
 
     render() {
         return (
             <form className="form-inline" onSubmit={this.logInButtonHandler}>
                 <div className="login-input-box">
-                    <input className="form-control" type="text" placeholder="Email" name="email"  required pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,6}$"/>
+                    <input className="form-control" type="text" placeholder="Email" name="email" 
+                            value={this.state.userModel.email}  
+                            onChange={(event) => this.inputValueChangeHandler('email', event.target.value)}
+                            required pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,6}$"/>
                     <div className="login-error-message">
 
                     </div>
                 </div>
                 <div className="login-input-box">
-                    <input className="form-control" type="password" placeholder="Password" name="password"  minLength="6" required/>
+                    <input className="form-control" type="password" placeholder="Password" name="password" 
+                            value={this.state.userModel.password}  
+                            onChange={(event) => this.inputValueChangeHandler('password', event.target.value)}
+                            minLength="6" required/>
                     <div className="login-error-message" >
 
                     </div>
