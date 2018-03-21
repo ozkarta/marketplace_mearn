@@ -20,13 +20,13 @@ class App extends React.Component {
                 <Router>
                     <div>
                         {
-                            !this.props.user.isAuthenticated && <VisitorMainComponent/>                    
+                            !this.props.user.isAuthenticated && <VisitorMainComponent {...this.props}/>                    
                         }
                         {
-                            this.props.user.isAuthenticated && this.props.user.role === 'seller' && <SellerMainComponent/>
+                            this.props.user.isAuthenticated && this.props.user.role === 'seller' && <SellerMainComponent {...this.props}/>
                         }
                         {
-                            this.props.user.isAuthenticated && this.props.user.role === 'buyer' && <BuyerMainComponent/>
+                            this.props.user.isAuthenticated && this.props.user.role === 'buyer' && <BuyerMainComponent {...this.props}/>
                         }
 
                        <Routes {...this.props}/>

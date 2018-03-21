@@ -10,12 +10,3 @@ export function logInUser(role, user, isAuthenticated) {
     
     return Object.assign({type: 'LOGIN'}, userToSign);
 }
-
-export function logOutUser() {
-    return {
-        type: 'LOGOUT',
-        role: 'visitor',
-        user: null,
-        isAuthenticated: false
-    }
-}

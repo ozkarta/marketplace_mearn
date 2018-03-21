@@ -46,9 +46,14 @@ class NavigationBar extends React.Component {
                     {this.state.dropDown.map(link => {
                       if (link.type === 'separator') {
                         return (<li key={link.key} role="separator" className="divider"></li>);
-                      } else {
-                        return <RouterLink key={link.key} link={link} listRole="presentation" listItemRole="menuitem" />
                       }
+                      
+                      if (link.type === 'action') {
+                        link.onClick = link.onClick.bind(link.this);
+                        return (<button  key={link.key} type="button" name="button" onClick={link.onClick}> {link.displayName}</button>)
+                      }
+
+                      return <RouterLink key={link.key} link={link} listRole="presentation" listItemRole="menuitem" />
                     })}
                   </ul>
                 </li>

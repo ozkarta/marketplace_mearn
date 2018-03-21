@@ -41,8 +41,7 @@ class InputForm extends React.Component {
     }
 
     logInButtonHandler(event) {
-        let action = LoginActions.logInUser('buyer', {}, true);
-        console.dir(action);
+        let action = LoginActions.logInUser('seller', {}, true);
         this.props.dispatch(action);
         event.preventDefault();
     }

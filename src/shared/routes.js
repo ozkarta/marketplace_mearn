@@ -78,7 +78,6 @@ class Routes extends React.Component {
     }
 
     render() {
-        console.log('Should rerender...');
         return (
             <React.Fragment>
                 <GenerateSwitch routeConfig={this.routeConfig} parentState={this.props} />
