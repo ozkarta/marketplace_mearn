@@ -1,8 +1,11 @@
 import React from 'react';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead';
 import * as CategoryActions from '../../actions/category';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 import './account.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 // <!--SOURCE   https://bootsnipp.com/snippets/featured/form-wizard-and-validation-->
 class SellerAccount extends React.Component {
@@ -31,7 +34,8 @@ class SellerAccount extends React.Component {
                 }
             },
             sellerAccountModel: {
-                categories: []
+                categories: [],
+                registrationDate: moment()
             },
             formStage: 1,
             formStageCount: 3
@@ -41,6 +45,7 @@ class SellerAccount extends React.Component {
         this.renderMenuItemChildren = this.renderMenuItemChildren.bind(this);
         this.typeHeadInputChangeHandler = this.typeHeadInputChangeHandler.bind(this);
         this.changeFormStage = this.changeFormStage.bind(this);
+        this.handleRegistrationDateChange = this.handleRegistrationDateChange.bind(this);
     }
 
     typeHeadInputChangeHandler(values) {
@@ -89,6 +94,12 @@ class SellerAccount extends React.Component {
             }
         }
 
+    }
+
+    handleRegistrationDateChange(date) {
+        let sellerAccountModel = this.state.sellerAccountModel;
+        sellerAccountModel.registrationDate = date;
+        this.setState({sellerAccountModel: sellerAccountModel});
     }
 
     render() {
@@ -175,13 +186,10 @@ class SellerAccount extends React.Component {
                                         <label className="control-label">Registration Date</label>
 
                                         <div className="input-group">
-                                            <input className="form-control" placeholder="yyyy-mm-dd"
-                                                name="registrationDateModel" />
-                                            <div className="input-group-append">
-                                                <button className="btn btn-outline-secondary" type="button">
-                                                    <img src="img/calendar-icon.svg" alt="imagesas" style={{width: '1.2rem', height: '1rem', cursor: 'pointer'}} />
-                                                </button>
-                                            </div>
+                                            <DatePicker
+                                                selected={this.state.sellerAccountModel.registrationDate}
+                                                onChange={this.handleRegistrationDateChange}
+                                            />
                                         </div>
 
                                     </div>
