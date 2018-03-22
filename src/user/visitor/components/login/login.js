@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 
-import * as LoginActions from '../../actions/login';
+import * as UserActions from '../../actions/user';
 import './login.css';
 
 
@@ -51,7 +51,7 @@ class InputForm extends React.Component {
     }
 
     logInButtonHandler(event) {
-        LoginActions.authenticate(this.state.userModel)
+        UserActions.authenticate(this.state.userModel)
             .then(
                 action => {
                     console.dir(action);

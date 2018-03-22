@@ -7,6 +7,7 @@ const AuthReducer = function (state = storageUser, action) {
             return Object.assign({}, state, action)
         case 'LOGOUT': {
             localStorage.removeItem('user');
+            localStorage.removeItem('token');
             return Object.assign({}, state, {
                 role: 'visitor',
                 user: null,

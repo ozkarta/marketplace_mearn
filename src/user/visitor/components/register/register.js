@@ -1,4 +1,7 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import * as UserActions from '../../actions/user';
+
 import './register.css';
 
 class VisitorRegister extends React.Component {
@@ -8,32 +11,25 @@ class VisitorRegister extends React.Component {
         this.state = Object.assign(
             {
                 userModel: {
-                    type: 'buyer',
+                    role: 'buyer',
                     firstName: '',
                     lastName: '',
                     email: '',
                     password: '',
                     confirmPassword: ''
                 },
-                globalError: '',
-                registrationType: {
-                    seller: {
-                        active: false
-                    },
-                    buyer: {
-                        active: true
-                    }
-                }
+                globalError: ''
             },
             props
         );
         this.inputValueChangeHandler = this.inputValueChangeHandler.bind(this);
         this.setUserType = this.setUserType.bind(this);
+        this.submitHandler = this.submitHandler.bind(this);
     }
 
-    setUserType(type) {
+    setUserType(role) {
         let oldUserModel = this.state.userModel;
-        oldUserModel.type = type;
+        oldUserModel.role = role;
         
         this.setState({userModel: oldUserModel});
     }
@@ -44,19 +40,32 @@ class VisitorRegister extends React.Component {
         this.setState({ userModel: userModel });
     }
 
+    submitHandler(event) {
+        UserActions.register(this.state.userModel)
+            .then(
+                action => {
+                    this.props.dispatch(action);
+                }
+            )
+            .catch(error => {
+                this.setState({globalError: error.msg});
+            });
+        event.preventDefault(); 
+    }
+
     render() {
         return (
-            <form className="form-inline">
+            <form className="form-inline" onSubmit={this.submitHandler}>
                 <div className="text-center m-md-bottom">
                     <h4 className="text-center m-sm-bottom">I want to:</h4>
                     <div className="btn-group">
-                        <button className={this.state.userModel.type === 'buyer'?  this.switchRoleDefaultClasses + ' active' : this.switchRoleDefaultClasses}
+                        <button className={this.state.userModel.role === 'buyer'?  this.switchRoleDefaultClasses + ' active' : this.switchRoleDefaultClasses}
                                 type="button" name="flowSwitchBtn"
                                 onClick={() => this.setUserType('buyer')}>
                             <span className="hidden-xs">Buy Products</span>
                             <span className="hidden-lg hidden-md hidden-sm">Hire</span>
                         </button>
-                        <button className={this.state.userModel.type === 'seller'?  this.switchRoleDefaultClasses + ' active' : this.switchRoleDefaultClasses} 
+                        <button className={this.state.userModel.role === 'seller'?  this.switchRoleDefaultClasses + ' active' : this.switchRoleDefaultClasses} 
                                 type="button"  name="flowSwitchBtn"
                                 onClick={() => this.setUserType('seller')}>
                             <span className="hidden-xs">Sell Products</span>
@@ -123,10 +132,33 @@ class VisitorRegister extends React.Component {
                         </div>
                     </li>
                 </ul>
-                <button className="btn btn-outline-success submit-registration" type="submit">Submit</button>
+
+                <ComponentErrorHandler errorMessage={this.state.globalError}/>
+                <button className="btn btn-outline-success submit-registration" type="submit">Register</button>
             </form>
         );
     }
 }
 
-export default VisitorRegister;
+class ComponentErrorHandler extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = props;
+    }
+
+    render() {
+        return (
+            <div >
+                {this.props.errorMessage}
+            </div>
+        );
+    }
+}
+
+export default connect(
+    (state) => {
+        return {
+            user: state.user
+        };
+    }
+)(VisitorRegister)

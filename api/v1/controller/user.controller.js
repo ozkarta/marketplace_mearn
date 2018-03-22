@@ -49,7 +49,7 @@ module.exports = function (express) {
         user.passwordHash = bcrypt.hashSync(req.body.password, 8);
 
         try {
-          let userSaved = user.save();
+          let userSaved = await user.save();
           let token = jwt.sign({ id: user._id }, config.SECRET, {
             expiresIn: 86400 // expires in 24 hours
           });

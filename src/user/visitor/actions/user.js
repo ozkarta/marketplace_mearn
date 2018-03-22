@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+const apiBaseUrl = '/api/v1';
 export async function authenticate(user) {
     try {
-        const response =  await axios.post('/api/v1/users/sign-in', user);
+        const response =  await axios.post(`${apiBaseUrl}/users/sign-in`, user);
         if (response && response.data && response.data.auth) {
             let usr = response.data.user;
             if (!usr) {
@@ -18,6 +19,24 @@ export async function authenticate(user) {
     }
 }
 
+export async function register(user) {
+    try {
+        const response = await axios.post(`${apiBaseUrl}/users/register`, user);
+        if (response && response.data && response.data.auth) {
+            let usr = response.data.user;
+            if (!usr) {
+                return logInUser('visitor', null, null, false);
+            }
+
+            return logInUser(usr.role, usr, response.data.token, response.data.auth);
+        } else {
+            return logInUser('visitor', null, null, false);
+        }
+    } catch (ex) {
+        throw ex.response.data;
+    }
+}
+
 
 export function logInUser(role, user, token, isAuthenticated) {
     let userToSign = {
@@ -25,7 +44,7 @@ export function logInUser(role, user, token, isAuthenticated) {
         user: user,
         isAuthenticated: isAuthenticated
     };
-
+    localStorage.setItem('token', JSON.stringify(token));
     localStorage.setItem('user', JSON.stringify(userToSign));
     
     return Object.assign({type: 'LOGIN'}, userToSign);
