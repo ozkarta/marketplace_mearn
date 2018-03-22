@@ -109,17 +109,17 @@ class SellerAccount extends React.Component {
                 <div className="stepwizard">
                     <div className="stepwizard-row setup-panel">
                         <div className="stepwizard-step">
-                            <a type="button" className="btn btn-primary btn-circle" >1</a>
+                            <a type="button" className={this.state.formStage === 1? 'btn btn-primary btn-circle': 'btn btn-default btn-circle'} >1</a>
                             <p>Step 1</p>
 
                         </div>
                         <div className="stepwizard-step">
-                            <a type="button" className="btn btn-default btn-circle" >2</a>
+                            <a type="button" className={this.state.formStage === 2? 'btn btn-primary btn-circle': 'btn btn-default btn-circle'} >2</a>
                             <p>Step 2</p>
 
                         </div>
                         <div className="stepwizard-step">
-                            <a type="button" className="btn btn-default btn-circle" >3</a>
+                            <a type="button" className={this.state.formStage === 3? 'btn btn-primary btn-circle': 'btn btn-default btn-circle'} >3</a>
                             <p>Step 3</p>
 
                         </div>
