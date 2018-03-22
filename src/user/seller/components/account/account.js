@@ -22,7 +22,7 @@ class SellerAccount extends React.Component {
                 },
                 filterBy: (option, text) => {
                     for (let i=0; i<this.state.sellerAccountModel.categories.length; i++) {
-                        let categoryId = this.state.sellerAccountModel.categories[i]
+                        let categoryId = this.state.sellerAccountModel.categories[i]._id;
                         if (categoryId === option._id) {
                             return null;
                         }
@@ -32,17 +32,20 @@ class SellerAccount extends React.Component {
             },
             sellerAccountModel: {
                 categories: []
-            }
+            },
+            formStage: 1,
+            formStageCount: 3
         }
 
         this.handleCategorySearch = this.handleCategorySearch.bind(this);
         this.renderMenuItemChildren = this.renderMenuItemChildren.bind(this);
         this.typeHeadInputChangeHandler = this.typeHeadInputChangeHandler.bind(this);
+        this.changeFormStage = this.changeFormStage.bind(this);
     }
 
     typeHeadInputChangeHandler(values) {
         let sellerAccountModel = this.state.sellerAccountModel;
-        sellerAccountModel.categories = values.map(category => category._id);
+        sellerAccountModel.categories = values;
         this.setState({sellerAccountModel: sellerAccountModel});
     }
     
@@ -71,10 +74,26 @@ class SellerAccount extends React.Component {
         );
     }
 
+    changeFormStage(value) {
+        let currentStage = this.state.formStage;
+        let formStageCount = this.state.formStageCount;
+        if (value > 0) {
+            if ((currentStage + value) <=  formStageCount) {
+                this.setState({formStage: currentStage + value})
+            }
+        }
+
+        if (value < 0) {
+            if ((currentStage + value) >= 1) {
+                this.setState({formStage: currentStage + value})
+            }
+        }
+
+    }
+
     render() {
         return (
-
-
+            
             <div className="container">
                 <div className="stepwizard">
                     <div className="stepwizard-row setup-panel">
@@ -97,85 +116,106 @@ class SellerAccount extends React.Component {
                 </div>
                 <form>
 
-                    <div className="row setup-content" id="step-1">
-                        <div className="col-xs-12">
-                            <div className="col-md-12">
-                                <h3> Choose Business Categories</h3>
+                    {   
+                        this.state.formStage === 1 && 
+                        <div className="row setup-content" id="step-1">
+                            <div className="col-xs-12">
+                                <div className="col-md-12">
+                                    <h3> Choose Business Categories</h3>
 
-                                <AsyncTypeahead 
-                                    {...this.state.typeHeadOptions}
-                                    onSearch={this.handleCategorySearch}
-                                    renderMenuItemChildren={(options, props) => {
-                                        return this.renderMenuItemChildren(options, props);
-                                    }}
-                                    onChange={this.typeHeadInputChangeHandler}
-                                />
+                                    <AsyncTypeahead 
+                                        {...this.state.typeHeadOptions}
+                                        selected={this.state.sellerAccountModel.categories}
+                                        onSearch={this.handleCategorySearch}
+                                        renderMenuItemChildren={(options, props) => {
+                                            return this.renderMenuItemChildren(options, props);
+                                        }}
+                                        onChange={this.typeHeadInputChangeHandler}
+                                    />
 
-                                <button className="btn btn-primary nextBtn btn-lg pull-right" type="button"  >Previous</button>
-                                <button className="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+                                    
+                                    <button className="btn btn-primary nextBtn btn-lg" type="button" 
+                                            onClick={(event) => this.changeFormStage(1)}>
+                                            Next
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
-                    <div className="row setup-content" id="step-2">
-                        <div className="col-xs-12">
-                            <div className="col-md-12">
-                                <h3> Step 2</h3>
-                                <div className="form-group">
-                                    <label className="control-label">Business Name</label>
-                                    <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Business Name"
+                    {
+                        this.state.formStage === 2 &&
+                        <div className="row setup-content" id="step-2">
+                            <div className="col-xs-12">
+                                <div className="col-md-12">
+                                    <h3> Step 2</h3>
+                                    <div className="form-group">
+                                        <label className="control-label">Business Name</label>
+                                        <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Business Name"
 
-                                        name="businessDisplayName" />
-                                </div>
-
-
-                                <div className="form-group">
-                                    <label className="control-label">Identification Code</label>
-                                    <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Identification Code"
-
-                                        name="identificationCode" />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="control-label">Registration Code</label>
-                                    <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Registration"
-
-                                        name="registrationCode" />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="control-label">Registration Date</label>
-
-                                    <div className="input-group">
-                                        <input className="form-control" placeholder="yyyy-mm-dd"
-                                            name="registrationDateModel" />
-                                        <div className="input-group-append">
-                                            <button className="btn btn-outline-secondary" type="button">
-                                                <img src="img/calendar-icon.svg" alt="imagesas" style={{width: '1.2rem', height: '1rem', cursor: 'pointer'}} />
-                                            </button>
-                                        </div>
+                                            name="businessDisplayName" />
                                     </div>
 
+
+                                    <div className="form-group">
+                                        <label className="control-label">Identification Code</label>
+                                        <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Identification Code"
+
+                                            name="identificationCode" />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="control-label">Registration Code</label>
+                                        <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Registration"
+
+                                            name="registrationCode" />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="control-label">Registration Date</label>
+
+                                        <div className="input-group">
+                                            <input className="form-control" placeholder="yyyy-mm-dd"
+                                                name="registrationDateModel" />
+                                            <div className="input-group-append">
+                                                <button className="btn btn-outline-secondary" type="button">
+                                                    <img src="img/calendar-icon.svg" alt="imagesas" style={{width: '1.2rem', height: '1rem', cursor: 'pointer'}} />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <button className="btn btn-primary nextBtn btn-lg" type="button"
+                                            onClick={(event) => this.changeFormStage(-1)}>
+                                        Previous
+                                    </button>
+                                    <button className="btn btn-primary nextBtn btn-lg" type="button" 
+                                            onClick={(event) => this.changeFormStage(1)}>
+                                            Next
+                                    </button>
                                 </div>
-
-
-                                <button className="btn btn-primary nextBtn btn-lg pull-right" type="button">Previous</button>
-                                <button className="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
                             </div>
                         </div>
-                    </div>
+                    }
 
-                    <div className="row setup-content" id="step-3">
-                        <div className="col-xs-12">
-                            <div className="col-md-12">
-                                <h3> Step 3</h3>
+                    {
+                        this.state.formStage === 3 &&
+                        <div className="row setup-content" id="step-3">
+                            <div className="col-xs-12">
+                                <div className="col-md-12">
+                                    <h3> Step 3</h3>
 
-                                <button className="btn btn-primary nextBtn btn-lg pull-right" type="button" >Previous</button>
-                                <button className="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
-                                <button className="btn btn-success btn-lg pull-right" type="submit">Finish!</button>
+                                    <button className="btn btn-primary nextBtn btn-lg" type="button"
+                                            onClick={(event) => this.changeFormStage(-1)}>
+                                        Previous
+                                    </button>
+                                    <button className="btn btn-success btn-lg" type="submit">Finish!</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
                 </form>
             </div>
