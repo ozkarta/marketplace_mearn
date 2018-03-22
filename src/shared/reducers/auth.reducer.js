@@ -1,5 +1,7 @@
-const storageUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : { role: 'visitor', user: null, isAuthenticated: false };
-
+let token = localStorage.getItem('token');
+const storageUser = localStorage.getItem('user') 
+    ? JSON.parse(localStorage.getItem('user')) : { role: 'visitor', user: null, isAuthenticated: false, token: null };
+storageUser.token = token;
 
 const AuthReducer = function (state = storageUser, action) {
     switch (action.type) {
@@ -11,8 +13,8 @@ const AuthReducer = function (state = storageUser, action) {
             return Object.assign({}, state, {
                 role: 'visitor',
                 user: null,
-                isAuthenticated: false
-
+                isAuthenticated: false,
+                token: null
             });
         }
             
