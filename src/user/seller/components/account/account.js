@@ -35,7 +35,11 @@ class SellerAccount extends React.Component {
             },
             sellerAccountModel: {
                 categories: [],
-                registrationDate: moment()
+                registrationDate: moment(),
+                businessName: '',
+                identificationCode: '',
+                registrationCode: '',
+
             },
             formStage: 1,
             formStageCount: 3
@@ -46,6 +50,7 @@ class SellerAccount extends React.Component {
         this.typeHeadInputChangeHandler = this.typeHeadInputChangeHandler.bind(this);
         this.changeFormStage = this.changeFormStage.bind(this);
         this.handleRegistrationDateChange = this.handleRegistrationDateChange.bind(this);
+        this.submitForm = this.submitForm.bind(this);
     }
 
     typeHeadInputChangeHandler(values) {
@@ -96,10 +101,15 @@ class SellerAccount extends React.Component {
 
     }
 
-    handleRegistrationDateChange(date) {
+    handleRegistrationDateChange(value, field) {
         let sellerAccountModel = this.state.sellerAccountModel;
-        sellerAccountModel.registrationDate = date;
+        sellerAccountModel[field] = value;
         this.setState({sellerAccountModel: sellerAccountModel});
+    }
+
+    submitForm(event) {
+        console.dir(this.state.sellerAccountModel);
+        event.preventDefault();
     }
 
     render() {
@@ -146,7 +156,8 @@ class SellerAccount extends React.Component {
 
                                     
                                     <button className="btn btn-primary nextBtn btn-lg" type="button" 
-                                            onClick={(event) => this.changeFormStage(1)}>
+                                            onClick={(event) => this.changeFormStage(1)}
+                                            disabled={!this.state.sellerAccountModel.categories.length}>
                                             Next
                                     </button>
                                 </div>
@@ -163,7 +174,10 @@ class SellerAccount extends React.Component {
                                     <div className="form-group">
                                         <label className="control-label">Business Name</label>
                                         <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Business Name"
-
+                                            value={this.state.sellerAccountModel.businessName}
+                                            onChange={(event) => {
+                                                this.handleRegistrationDateChange(event.target.value, 'businessName');
+                                            }}
                                             name="businessDisplayName" />
                                     </div>
 
@@ -171,14 +185,20 @@ class SellerAccount extends React.Component {
                                     <div className="form-group">
                                         <label className="control-label">Identification Code</label>
                                         <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Identification Code"
-
+                                            value={this.state.sellerAccountModel.identificationCode}
+                                            onChange={(event) => {
+                                                this.handleRegistrationDateChange(event.target.value, 'identificationCode');
+                                            }}
                                             name="identificationCode" />
                                     </div>
 
                                     <div className="form-group">
                                         <label className="control-label">Registration Code</label>
-                                        <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Registration"
-
+                                        <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Registration Code"
+                                        value={this.state.sellerAccountModel.registrationCode}
+                                            onChange={(event) => {
+                                                this.handleRegistrationDateChange(event.target.value, 'registrationCode');
+                                            }}
                                             name="registrationCode" />
                                     </div>
 
@@ -188,7 +208,9 @@ class SellerAccount extends React.Component {
                                         <div className="input-group">
                                             <DatePicker
                                                 selected={this.state.sellerAccountModel.registrationDate}
-                                                onChange={this.handleRegistrationDateChange}
+                                                onChange={(date) => {
+                                                    this.handleRegistrationDateChange(date, 'registrationDate');
+                                                }}
                                             />
                                         </div>
 
@@ -219,7 +241,7 @@ class SellerAccount extends React.Component {
                                             onClick={(event) => this.changeFormStage(-1)}>
                                         Previous
                                     </button>
-                                    <button className="btn btn-success btn-lg" type="submit">Finish!</button>
+                                    <button className="btn btn-success btn-lg" type="submit" onClick={this.submitForm}>Finish!</button>
                                 </div>
                             </div>
                         </div>
