@@ -3,7 +3,7 @@ let LocalizationString = require('./types/localization.type');
 let Address = require('./types/address.type');
 let businessSchema = new mongoose.Schema({
   owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-  businessDisplayName: LocalizationString,
+  businessDisplayName: {type: String, trim: true, required: true, default: ''},
   businessType: [],
   businessCategories: [{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
   identificationCode: {},

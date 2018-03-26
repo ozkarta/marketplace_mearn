@@ -55,7 +55,7 @@ module.exports = function (express) {
           });
 
           delete userSaved['passwordHash'];
-          return res.status(200).send({ auth: true, token: token , user: userSaved});
+          return res.status(200).json({ auth: true, token: token , user: userSaved});
         } catch (error) {
           return util.sendHttpResponseMessage(res, MSG.serverError.internalServerError, error);
         }
@@ -75,6 +75,7 @@ module.exports = function (express) {
         try {
           let user = await UserModel.findOne({email: req.body.email})
             .lean()
+            .populate([{path: 'business'}])
             .exec();
 
           if (!user) {
@@ -90,7 +91,7 @@ module.exports = function (express) {
             expiresIn: 86400 // expires in 24 hours
           });
           delete user['passwordHash'];
-          res.status(200).send({ auth: true, token: token, user: user });
+          res.status(200).json({ auth: true, token: token, user: user });
 
         } catch(error) {
           return util.sendHttpResponseMessage(res, MSG.serverError.internalServerError, error);
@@ -99,7 +100,7 @@ module.exports = function (express) {
     });
 
     router.get('/log-out', function(req, res) {
-        res.status(200).send({ auth: false, token: null });
+        res.status(200).json({ auth: false, token: null });
     });
 
     router.put('/', (req, res) => {

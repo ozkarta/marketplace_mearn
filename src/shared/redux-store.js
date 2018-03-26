@@ -1,10 +1,9 @@
 import {createStore, combineReducers} from 'redux';
-import AuthReducer from './reducers/auth.reducer';
-
+import UserReducer from './reducers/user.reducer';
 
 const combinedReducer = combineReducers({
-    user: AuthReducer
-})
+    user: UserReducer
+});
 
 const store = createStore(combinedReducer,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());

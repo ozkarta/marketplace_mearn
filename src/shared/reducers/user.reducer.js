@@ -14,7 +14,7 @@ const defaultReduxUserState = storageUser ?
 
 
 
-const AuthReducer = function (state = defaultReduxUserState, action) {
+const UserReducer = function (state = defaultReduxUserState, action) {
     switch (action.type) {
         case 'LOGIN': {
             let assignedObject = Object.assign({}, state, action);
@@ -35,6 +35,13 @@ const AuthReducer = function (state = defaultReduxUserState, action) {
                 token: null
             });
         }
+
+        case 'SELLER_BUSINESS_PROFILE_CREATED': {
+            let assignedObject = Object.assign({}, state);
+            assignedObject.user.business = action.business;
+            localStorage.setItem('user', JSON.stringify(assignedObject.user));
+            return assignedObject;
+        }
             
         default: {
             if (state.isAuthenticated) {
@@ -48,4 +55,4 @@ const AuthReducer = function (state = defaultReduxUserState, action) {
     }
 }
 
-export default AuthReducer;
+export default UserReducer;

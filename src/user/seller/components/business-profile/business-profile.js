@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import * as CategoryActions from '../../actions/category';
 import * as BusinessActions from '../../actions/business';
@@ -11,21 +12,22 @@ import 'react-datepicker/dist/react-datepicker.css';
 // <!--SOURCE   https://bootsnipp.com/snippets/featured/form-wizard-and-validation-->
 class SellerBusinessProfile extends React.Component {
     constructor(props) {
+        console.dir(props);
         super(props);
         this.state = {
             ...props,
             sellerBusinessProfileModel: {
-                categories: [],
+                businessCategories: [],
                 registrationDate: moment(),
-                businessName: '',
-                identificationCode: '',
-                registrationCode: '',
+                businessDisplayName: 'Ozkart Corp',
+                identificationCode: 'ID_2883712',
+                registrationCode: 'REG_7612389_76',
                 address: {
-                    street: '',
-                    city: '',
-                    province: '',
-                    country: '',
-                    zip: ''
+                    street: 'Tashkenti St 25',
+                    city: 'Tbilisi',
+                    province: 'Kartli',
+                    country: 'Georgia',
+                    zip: '0160'
                 }
 
             },
@@ -37,11 +39,10 @@ class SellerBusinessProfile extends React.Component {
                 this.setState({ formStage: currentStage + value });
             },
             submitForm: (event) => {
-                console.dir(this.state.sellerBusinessProfileModel);
-                BusinessActions.createBusinessProfile(this.state.sellerBusinessProfileModel)
+                BusinessActions.createBusinessProfile(this.state.sellerBusinessProfileModel, this.props.user.user)
                     .then(
                         result => {
-                            console.dir(result);
+                            this.props.dispatch({type: 'SELLER_BUSINESS_PROFILE_CREATED', business: result});
                         }
                     )
                     .catch(error => {
@@ -161,13 +162,13 @@ class Stage1Component extends React.Component {
                 multiple: true,
                 options: [],
                 minLength: 1,
-                placeholder: "Please choose categories.",
+                placeholder: "Please choose businessCategories.",
                 labelKey: (option) => {
                     return option.categoryName.en;
                 },
                 filterBy: (option, text) => {
-                    for (let i = 0; i < this.state.sellerBusinessProfileModel.categories.length; i++) {
-                        let categoryId = this.state.sellerBusinessProfileModel.categories[i]._id;
+                    for (let i = 0; i < this.state.sellerBusinessProfileModel.businessCategories.length; i++) {
+                        let categoryId = this.state.sellerBusinessProfileModel.businessCategories[i]._id;
                         if (categoryId === option._id) {
                             return null;
                         }
@@ -185,7 +186,7 @@ class Stage1Component extends React.Component {
 
     typeHeadInputChangeHandler(values) {
         let sellerBusinessProfileModel = this.state.sellerBusinessProfileModel;
-        sellerBusinessProfileModel.categories = values;
+        sellerBusinessProfileModel.businessCategories = values;
         this.setState({ sellerBusinessProfileModel: sellerBusinessProfileModel });
     }
 
@@ -196,10 +197,10 @@ class Stage1Component extends React.Component {
         this.setState({ typeHeadOptions: typeHeadOptions });
 
         CategoryActions.getCategoryList({ categoryName: query, page: 0, size: 10 })
-            .then((categories) => {
+            .then((businessCategories) => {
                 let typeHeadOptions = this.state.typeHeadOptions;
                 typeHeadOptions.isLoading = false;
-                typeHeadOptions.options = categories || [];
+                typeHeadOptions.options = businessCategories || [];
 
                 this.setState({ typeHeadOptions: typeHeadOptions });
             })
@@ -215,7 +216,7 @@ class Stage1Component extends React.Component {
     }
 
     validatorFunction() {
-        return this.props.sellerBusinessProfileModel.categories.length;
+        return this.props.sellerBusinessProfileModel.businessCategories.length;
     }
 
     render() {
@@ -223,11 +224,11 @@ class Stage1Component extends React.Component {
             <div className="row setup-content" id="step-1">
                 <div className="col-xs-12">
                     <div className="col-md-12">
-                        <h3> Choose Business Categories</h3>
+                        <h3> Choose Business businessCategories</h3>
 
                         <AsyncTypeahead
                             {...this.state.typeHeadOptions}
-                            selected={this.props.sellerBusinessProfileModel.categories}
+                            selected={this.props.sellerBusinessProfileModel.businessCategories}
                             onSearch={this.handleCategorySearch}
                             renderMenuItemChildren={(options, props) => {
                                 return this.renderMenuItemChildren(options, props);
@@ -264,9 +265,9 @@ class Stage2Component extends React.Component {
                         <div className="form-group">
                             <label className="control-label">Business Name</label>
                             <input maxLength="200" type="text" required="required" className="form-control" placeholder="Enter Business Name"
-                                value={this.props.sellerBusinessProfileModel.businessName}
+                                value={this.props.sellerBusinessProfileModel.businessDisplayName}
                                 onChange={(event) => {
-                                    this.props.handleRegistrationDataChange(event.target.value, 'businessName');
+                                    this.props.handleRegistrationDataChange(event.target.value, 'businessDisplayName');
                                 }}
                                 name="businessDisplayName" />
                         </div>
@@ -463,4 +464,10 @@ class FinishButton extends React.Component {
     }
 }
 
-export default SellerBusinessProfile;
+export default connect(
+    (state) => {
+        return {
+            user: state.user
+        };
+    }
+) (SellerBusinessProfile);
