@@ -1,6 +1,7 @@
 import React from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import * as CategoryActions from '../../actions/category';
+import * as BusinessActions from '../../actions/business';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import './business-profile.css';
@@ -28,6 +29,7 @@ class SellerBusinessProfile extends React.Component {
                 }
 
             },
+            globalError: '',
             formStage: 1,
             formStageCount: 4,
             changeFormStage: (value) => {
@@ -36,6 +38,16 @@ class SellerBusinessProfile extends React.Component {
             },
             submitForm: (event) => {
                 console.dir(this.state.sellerBusinessProfileModel);
+                BusinessActions.createBusinessProfile(this.state.sellerBusinessProfileModel)
+                    .then(
+                        result => {
+                            console.dir(result);
+                        }
+                    )
+                    .catch(error => {
+                        console.dir(error);
+                        this.setState({globalError: error.msg});
+                    });
                 event.preventDefault();
             },
             handleRegistrationDataChange: (value, field, parent) => {

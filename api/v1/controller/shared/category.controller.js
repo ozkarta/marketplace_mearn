@@ -61,7 +61,7 @@ module.exports = function (express) {
     })
   });
 
-  router.post('/', async (req, res) => {
+  router.post('/initialize', async (req, res) => {
     await generateCategoryDb();
 
     async function generateCategoryDb() {

@@ -5,7 +5,12 @@ module.exports = function (express) {
   let util = require('../../shared/util/util');
 
   router.get('/', async (req, res) => {
-    res.status(200).json({});
+    return res.status(200).json({});
+  });
+
+  router.post('/account', async (req, res) => {
+    console.dir(req.body);
+    return res.status(200).json({});
   });
 
 
