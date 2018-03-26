@@ -9,9 +9,7 @@ import './login.css';
 class VisitorLogIn extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
+        this.state = props;
     }
 
     render() {
@@ -51,15 +49,17 @@ class InputForm extends React.Component {
     }
 
     logInButtonHandler(event) {
+        this.state.dispatch({type: 'BUSY_INDICATOR', busy: true});
         UserActions.authenticate(this.state.userModel)
             .then(
                 action => {
-                    console.dir(action);
+                    this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
                     this.props.dispatch(action);
                 }
             )
             .catch(error => {
                 this.setState({globalError: error.msg});
+                this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
             });
         event.preventDefault();    
     }

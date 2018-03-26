@@ -1,8 +1,10 @@
 import {createStore, combineReducers} from 'redux';
 import UserReducer from './reducers/user.reducer';
+import BusyIndicatorReduced from './reducers/busy-indicator.reducer';
 
 const combinedReducer = combineReducers({
-    user: UserReducer
+    user: UserReducer,
+    busyIndicator: BusyIndicatorReduced
 });
 
 const store = createStore(combinedReducer,

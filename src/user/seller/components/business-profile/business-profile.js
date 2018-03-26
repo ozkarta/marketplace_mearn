@@ -39,14 +39,17 @@ class SellerBusinessProfile extends React.Component {
                 this.setState({ formStage: currentStage + value });
             },
             submitForm: (event) => {
+                this.state.dispatch({type: 'BUSY_INDICATOR', busy: true});
                 BusinessActions.createBusinessProfile(this.state.sellerBusinessProfileModel, this.props.user.user)
                     .then(
                         result => {
+                            this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
                             this.props.dispatch({type: 'SELLER_BUSINESS_PROFILE_CREATED', business: result});
                         }
                     )
                     .catch(error => {
                         console.dir(error);
+                        this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
                         this.setState({globalError: error.msg});
                     });
                 event.preventDefault();

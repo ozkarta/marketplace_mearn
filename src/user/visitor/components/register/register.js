@@ -41,13 +41,16 @@ class VisitorRegister extends React.Component {
     }
 
     submitHandler(event) {
+        this.state.dispatch({type: 'BUSY_INDICATOR', busy: true});
         UserActions.register(this.state.userModel)
             .then(
                 action => {
+                    this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
                     this.props.dispatch(action);
                 }
             )
             .catch(error => {
+                this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
                 this.setState({globalError: error.msg});
             });
         event.preventDefault(); 

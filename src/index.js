@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 
 import App from './app';
+import BusyIndicator from './shared/components/busy-indicator/busy-indicator';
 import './index.css';
 
 import store from './shared/redux-store';
@@ -12,7 +13,10 @@ axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? 'http://localh
 function render() {
     ReactDOM.render(
         <Provider store={store}>
-            <App/>
+            <React.Fragment>
+                <App/>
+                <BusyIndicator color="#000000" type="spin"/>
+            </React.Fragment>
         </Provider>,
         document.getElementById('root')
     );
