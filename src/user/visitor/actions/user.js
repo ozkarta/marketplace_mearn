@@ -45,8 +45,5 @@ export function logInUser(role, user, token, isAuthenticated) {
         isAuthenticated: isAuthenticated,
         token: token
     };
-    localStorage.setItem('token', JSON.stringify(token));
-    localStorage.setItem('user', JSON.stringify(userToSign));
-    
     return Object.assign({type: 'LOGIN'}, userToSign);
 }

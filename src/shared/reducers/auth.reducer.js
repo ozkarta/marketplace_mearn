@@ -5,8 +5,13 @@ storageUser.token = token;
 
 const AuthReducer = function (state = storageUser, action) {
     switch (action.type) {
-        case 'LOGIN':
-            return Object.assign({}, state, action)
+        case 'LOGIN': {
+            let assignedObject = Object.assign({}, state, action);
+            localStorage.setItem('token', JSON.stringify(assignedObject.token));
+            localStorage.setItem('user', JSON.stringify(assignedObject.user));
+            return assignedObject;
+        }
+            
         case 'LOGOUT': {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
