@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
 import {connect} from 'react-redux';
+import './busy-indicator.css';
 
 class BusyIndicator extends React.Component {
     constructor(props) {
@@ -12,7 +13,9 @@ class BusyIndicator extends React.Component {
     render() {
         if (this.props.busyIndicator.isBusy) {
             return (
-                <ReactLoading type={this.props.type} color={this.props.color} height={this.props.height} width={this.props.width} delay="0" />
+                <div className="busy-indicator">
+                    <ReactLoading type={this.props.type} color={this.props.color} height={this.props.height} width={this.props.width} delay={0} />
+                </div>
             );
         } else {
             return null;
