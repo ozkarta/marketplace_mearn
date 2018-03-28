@@ -7,7 +7,6 @@ class BusyIndicator extends React.Component {
     constructor(props) {
         super(props);
         this.state = props;
-        console.dir(this.props);
     }
 
     render() {

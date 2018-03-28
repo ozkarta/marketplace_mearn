@@ -54,6 +54,7 @@ module.exports = function (express) {
             expiresIn: 86400 // expires in 24 hours
           });
 
+          userSaved = await UserModel.populate(userSaved, {path: 'business', populate: {path: 'businessCategories'}});
           delete userSaved['passwordHash'];
           return res.status(200).json({ auth: true, token: token , user: userSaved});
         } catch (error) {
@@ -75,7 +76,7 @@ module.exports = function (express) {
         try {
           let user = await UserModel.findOne({email: req.body.email})
             .lean()
-            .populate([{path: 'business'}])
+            .populate([{path: 'business', populate: {path: 'businessCategories'}}])
             .exec();
 
           if (!user) {

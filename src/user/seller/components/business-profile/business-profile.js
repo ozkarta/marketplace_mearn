@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import * as CategoryActions from '../../actions/category';
 import * as BusinessActions from '../../actions/business';
@@ -12,25 +12,24 @@ import 'react-datepicker/dist/react-datepicker.css';
 // <!--SOURCE   https://bootsnipp.com/snippets/featured/form-wizard-and-validation-->
 class SellerBusinessProfile extends React.Component {
     constructor(props) {
-        console.dir(props);
         super(props);
         this.state = {
             ...props,
             sellerBusinessProfileModel: {
                 businessCategories: [],
                 registrationDate: moment(),
-                businessDisplayName: 'Ozkart Corp',
-                identificationCode: 'ID_2883712',
-                registrationCode: 'REG_7612389_76',
+                businessDisplayName: '',
+                identificationCode: '',
+                registrationCode: '',
                 address: {
-                    street: 'Tashkenti St 25',
-                    city: 'Tbilisi',
-                    province: 'Kartli',
-                    country: 'Georgia',
-                    zip: '0160'
+                    street: '',
+                    city: '',
+                    province: '',
+                    country: '',
+                    zip: ''
                 }
-
             },
+            isCreateForm: true,
             globalError: '',
             formStage: 1,
             formStageCount: 4,
@@ -39,18 +38,19 @@ class SellerBusinessProfile extends React.Component {
                 this.setState({ formStage: currentStage + value });
             },
             submitForm: (event) => {
-                this.state.dispatch({type: 'BUSY_INDICATOR', busy: true});
-                BusinessActions.createBusinessProfile(this.state.sellerBusinessProfileModel, this.props.user.user)
+                this.props.dispatch({ type: 'BUSY_INDICATOR', busy: true });
+                BusinessActions.createBusinessProfile(this.state.sellerBusinessProfileModel, this.props.user)
                     .then(
                         result => {
-                            this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
-                            this.props.dispatch({type: 'SELLER_BUSINESS_PROFILE_CREATED', business: result});
+                            this.props.dispatch({ type: 'BUSY_INDICATOR', busy: false });
+                            this.props.dispatch({ type: 'SELLER_BUSINESS_PROFILE_CREATED', business: result });
+                            this.afterFormSubmitAction();
                         }
                     )
                     .catch(error => {
                         console.dir(error);
-                        this.state.dispatch({type: 'BUSY_INDICATOR', busy: false});
-                        this.setState({globalError: error.msg});
+                        this.props.dispatch({ type: 'BUSY_INDICATOR', busy: false });
+                        this.setState({ globalError: error.msg });
                     });
                 event.preventDefault();
             },
@@ -61,14 +61,65 @@ class SellerBusinessProfile extends React.Component {
                 } else {
                     sellerBusinessProfileModel[field] = value;
                 }
-                
+
                 this.setState({ sellerBusinessProfileModel: sellerBusinessProfileModel });
+            },
+            typeHeadInputChangeHandler: (values) =>{
+                let prevState = Object.assign({}, this.state);
+                prevState.sellerBusinessProfileModel.businessCategories = values;
+                this.setState(prevState);
             }
         }
 
         this.state.changeFormStage = this.state.changeFormStage.bind(this);
         this.state.submitForm = this.state.submitForm.bind(this);
         this.state.handleRegistrationDataChange = this.state.handleRegistrationDataChange.bind(this);
+        this.state.typeHeadInputChangeHandler = this.state.typeHeadInputChangeHandler.bind(this);
+        this.afterFormSubmitAction = this.afterFormSubmitAction.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.dispatch({ type: 'BUSY_INDICATOR', busy: true });
+        BusinessActions.getBusinessByUserId(this.props.user._id)
+            .then(
+                result => {
+                    let restoredSellerBusinessProfileModel = Object.assign({}, result);
+                    restoredSellerBusinessProfileModel.registrationDate = moment(restoredSellerBusinessProfileModel.registrationDate);
+                    this.setState(Object.assign(this.state, { 
+                        isCreateForm: false,
+                        sellerBusinessProfileModel: restoredSellerBusinessProfileModel,
+                        submitForm: (event) => {
+                            this.props.dispatch({ type: 'BUSY_INDICATOR', busy: true });
+                            BusinessActions.updateBusinessProfile(this.state.sellerBusinessProfileModel)
+                                .then(
+                                    result => {
+                                        this.props.dispatch({ type: 'BUSY_INDICATOR', busy: false });
+                                        this.props.dispatch({ type: 'SELLER_BUSINESS_PROFILE_UPDATED', business: result });
+                                        this.afterFormSubmitAction();
+                                    }
+                                )
+                                .catch(error => {
+                                    console.dir(error);
+                                    this.props.dispatch({ type: 'BUSY_INDICATOR', busy: false });
+                                    this.setState({ globalError: error.msg });
+                                });
+                            event.preventDefault();
+                        }
+                    }));
+                    this.props.dispatch({ type: 'BUSY_INDICATOR', busy: false });
+                }
+            )
+            .catch(error => {
+                console.dir(error);
+                this.props.dispatch({ type: 'BUSY_INDICATOR', busy: false });
+            });
+    }
+
+    afterFormSubmitAction() {
+        console.log('After Form Submit...');
+        let prevState = Object.assign({}, this.state);
+        prevState.formStage = 1;
+        this.setState(prevState);
     }
 
     render() {
@@ -137,7 +188,7 @@ class AccountFormComponent extends React.Component {
                     this.props.formStage === 2 &&
                     <Stage2Component {...this.props} />
                 }
-                
+
                 {
                     this.props.formStage === 3 &&
                     <Stage3Component {...this.props} />
@@ -145,7 +196,7 @@ class AccountFormComponent extends React.Component {
 
                 {
                     this.props.formStage === 4 &&
-                    <FinalStage {...this.state} />
+                    <FinalStage {...this.props} />
                 }
 
             </form>
@@ -167,7 +218,10 @@ class Stage1Component extends React.Component {
                 minLength: 1,
                 placeholder: "Please choose businessCategories.",
                 labelKey: (option) => {
-                    return option.categoryName.en;
+                    if (option && option.categoryName && option.categoryName.en) {
+                        return option.categoryName.en;
+                    }
+                    return option;
                 },
                 filterBy: (option, text) => {
                     for (let i = 0; i < this.state.sellerBusinessProfileModel.businessCategories.length; i++) {
@@ -183,14 +237,8 @@ class Stage1Component extends React.Component {
 
         this.handleCategorySearch = this.handleCategorySearch.bind(this);
         this.renderMenuItemChildren = this.renderMenuItemChildren.bind(this);
-        this.typeHeadInputChangeHandler = this.typeHeadInputChangeHandler.bind(this);
+        //this.typeHeadInputChangeHandler = this.typeHeadInputChangeHandler.bind(this);
         this.validatorFunction = this.validatorFunction.bind(this);
-    }
-
-    typeHeadInputChangeHandler(values) {
-        let sellerBusinessProfileModel = this.state.sellerBusinessProfileModel;
-        sellerBusinessProfileModel.businessCategories = values;
-        this.setState({ sellerBusinessProfileModel: sellerBusinessProfileModel });
     }
 
     handleCategorySearch(query) {
@@ -236,7 +284,7 @@ class Stage1Component extends React.Component {
                             renderMenuItemChildren={(options, props) => {
                                 return this.renderMenuItemChildren(options, props);
                             }}
-                            onChange={this.typeHeadInputChangeHandler}
+                            onChange={this.props.typeHeadInputChangeHandler}
                         />
 
                         <NextButton validatorFunction={this.validatorFunction} {...this.props} />
@@ -462,15 +510,13 @@ class FinishButton extends React.Component {
 
     render() {
         return (
-            <button className="btn btn-success btn-lg" type="submit" onClick={this.props.submitForm}>Finish!</button>
+            <button className="btn btn-success btn-lg" type="submit" onClick={this.props.submitForm}>{this.props.isCreateForm? 'Create': 'Update'}</button>
         );
     }
 }
 
 export default connect(
     (state) => {
-        return {
-            user: state.user
-        };
+        return state.user;
     }
-) (SellerBusinessProfile);
+)(SellerBusinessProfile);

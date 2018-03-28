@@ -42,6 +42,13 @@ const UserReducer = function (state = defaultReduxUserState, action) {
             localStorage.setItem('user', JSON.stringify(assignedObject.user));
             return assignedObject;
         }
+
+        case 'SELLER_BUSINESS_PROFILE_UPDATED': {
+            let assignedObject = Object.assign({}, state);
+            assignedObject.user.business = action.business;
+            localStorage.setItem('user', JSON.stringify(assignedObject.user));
+            return assignedObject;
+        }
             
         default: {
             if (state.isAuthenticated) {
