@@ -6,7 +6,7 @@ const apiBaseUrl = '/api/v1';
 export async function createBusinessProfile(businessProfile, user) {
     let body = Object.assign(businessProfile, {owner: user});
     try {
-        let result = await axios.post(`${apiBaseUrl}/seller/businesses/account`, body);
+        let result = await axios.post(`${apiBaseUrl}/seller/businesses/profile`, body);
         if (result && result.data) {
             return result.data;
         }
@@ -19,7 +19,7 @@ export async function createBusinessProfile(businessProfile, user) {
 export async function updateBusinessProfile(businessProfile) {
     let body = Object.assign(businessProfile);
     try {
-        let result = await axios.put(`${apiBaseUrl}/seller/businesses/account`, body);
+        let result = await axios.put(`${apiBaseUrl}/seller/businesses/profile`, body);
         if (result && result.data) {
             return result.data;
         }
@@ -31,7 +31,7 @@ export async function updateBusinessProfile(businessProfile) {
 
 export async function getBusinessByUserId(userId) {
     try {
-        let result = await axios.get(`${apiBaseUrl}/seller/businesses/account/${userId}`);
+        let result = await axios.get(`${apiBaseUrl}/seller/businesses/profile/${userId}`);
         if (result && result.data) {
             return result.data;
         }

@@ -7,7 +7,7 @@ module.exports = function (express) {
   let User = require('../../model/user.model').model;
   let mongoose = require('mongoose');
   
-  router.get('/account/:userId', async (req, res) => {
+  router.get('/profile/:userId', async (req, res) => {
     if (!req.params.userId || !mongoose.Types.ObjectId.isValid(req.params.userId )) {
       return util.sendHttpResponseMessage(res, MSG.clientError.badRequest, null, 'You should include VALID userId in request parameters.');
     }
@@ -20,7 +20,7 @@ module.exports = function (express) {
     }
   });
 
-  router.post('/account', async (req, res) => {
+  router.post('/profile', async (req, res) => {
     let business = new Business(req.body);
     try {
       let savedBusiness = await business.save();
@@ -33,7 +33,7 @@ module.exports = function (express) {
     }
   });
 
-  router.put('/account', async (req, res) => {
+  router.put('/profile', async (req, res) => {
     try {
       let updatedResult = await Business.findByIdAndUpdate(req.body._id, req.body, {new: true});
       return res.status(200).json(updatedResult);
