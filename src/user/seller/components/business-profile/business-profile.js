@@ -5,6 +5,7 @@ import * as CategoryActions from '../../actions/category';
 import * as BusinessActions from '../../actions/business';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import {Redirect} from 'react-router-dom';
 import './business-profile.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -87,7 +88,7 @@ class SellerBusinessProfile extends React.Component {
                     restoredSellerBusinessProfileModel.registrationDate = moment(restoredSellerBusinessProfileModel.registrationDate);
                     this.setState(Object.assign(this.state, { 
                         isCreateForm: false,
-                        sellerBusinessProfileModel: restoredSellerBusinessProfileModel,
+                        sellerBusinessProfileModel: Object.assign(this.state.sellerBusinessProfileModel, restoredSellerBusinessProfileModel),
                         submitForm: (event) => {
                             this.props.dispatch({ type: 'BUSY_INDICATOR', busy: true });
                             BusinessActions.updateBusinessProfile(this.state.sellerBusinessProfileModel)
@@ -116,10 +117,13 @@ class SellerBusinessProfile extends React.Component {
     }
 
     afterFormSubmitAction() {
-        console.log('After Form Submit...');
-        let prevState = Object.assign({}, this.state);
-        prevState.formStage = 1;
-        this.setState(prevState);
+        let stateCopy = Object.assign({}, this.state);
+        stateCopy.formStage = 1;
+        stateCopy.navigate = {
+            to: '/seller',
+            push: true
+        };
+        this.setState(stateCopy);
     }
 
     render() {
@@ -128,6 +132,7 @@ class SellerBusinessProfile extends React.Component {
             <div className="container">
                 <StepWizard {...this.state} />
                 <AccountFormComponent {...this.state} />
+                {this.state.navigate && <Redirect {...this.state.navigate}/>}
             </div>
         );
     }

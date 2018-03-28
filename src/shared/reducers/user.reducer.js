@@ -24,6 +24,18 @@ const UserReducer = function (state = defaultReduxUserState, action) {
 
             return assignedObject;
         }
+
+        case 'LOGIN_AFTER_USER_UPDATE': {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            
+            let assignedObject = Object.assign({}, state, action);
+            localStorage.setItem('token', JSON.stringify(assignedObject.token));
+            localStorage.setItem('user', JSON.stringify(assignedObject.user));
+            axios.defaults.headers.common['Authorization'] = assignedObject.token;
+
+            return assignedObject;
+        }
             
         case 'LOGOUT': {
             localStorage.removeItem('user');
