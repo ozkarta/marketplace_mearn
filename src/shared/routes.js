@@ -9,6 +9,7 @@ import VisitorRegister from '../user/visitor/components/register/register';
 import SellerHome from '../user/seller/components/home/home';
 import SellerAccount from '../user/seller/components/account/account';
 import SellerBusinessProfile from '../user/seller/components/business-profile/business-profile';
+import SellerStore from '../user/seller/components/store/store';
 
 import BuyerHome from '../user/buyer/components/home/home';
 import BuyerAccount from '../user/buyer/components/account/account';
@@ -68,6 +69,11 @@ class Routes extends React.Component {
         },
         {
             route: { path: '/seller/business-profile', component: SellerBusinessProfile },
+            routeUserRole: 'seller',
+            authRequired: true
+        },
+        {
+            route: { path: '/seller/store', component: SellerStore },
             routeUserRole: 'seller',
             authRequired: true
         },
