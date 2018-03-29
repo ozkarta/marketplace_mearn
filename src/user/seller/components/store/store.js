@@ -1,23 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import * as _ from 'lodash';
+import { Typeahead, AsyncTypeahead } from 'react-bootstrap-typeahead';
 import './store.css';
-
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 class SellerStore extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             ...props,
             store: {
-                media: [
-                    {
-                        type: 'file', format: 'jpeg',
-                        url: 'https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg'
-                    },
-                    {
-                        type: 'file', format: 'jpeg',
-                        url: 'https://i.pinimg.com/originals/d6/92/2f/d6922f02ad13b06356757499eae5831f.jpg'
-                    }
-                ]
+                title: 'Ozkart Store',
+                friendlyId: 'ozkart_store',
+                shortDescription: 'Short Description of Ozkart Store: this is test trial store...',
+                longDescription: 'Long Description of Ozkart Store: this is test trial store...',
+                address: [],
+                termsAndCondition: '',
+                phones:[],
+                emails: [],
+                facebook: '',
+                categories: [],
+                keywords: []
             },
             filesToUpload: [],
             fileChangedHandler: (event) => {
@@ -31,12 +34,40 @@ class SellerStore extends React.Component {
             formSubmitHandler: (event) => {
                 console.log('Form Submitted.');
                 event.preventDefault();
+            },
+            defaultFieldChangeHandler: (value, address) => {
+                let stateCP = Object.assign({}, this.state);
+                _.set(stateCP, `store.${address}`, value);
+                this.setState(stateCP);
+            },
+            storeNameChangeHandler: (value) => {
+                let stateCP = Object.assign({}, this.state);
+                stateCP.store.title = value;
+                stateCP.store.friendlyId = this.generateFriendlyId(value);
+                this.setState(stateCP);
+            },
+            friendlyIdChangeHandler: (value) => {
+                let stateCP = Object.assign({}, this.state);
+                stateCP.store.friendlyId = this.generateFriendlyId(value);
+                this.setState(stateCP);
             }
         };
 
         this.state.fileChangedHandler = this.state.fileChangedHandler.bind(this);
         this.state.uploadHandler = this.state.uploadHandler.bind(this);
         this.state.formSubmitHandler = this.state.formSubmitHandler.bind(this);
+        this.state.defaultFieldChangeHandler = this.state.defaultFieldChangeHandler.bind(this);
+        this.state.storeNameChangeHandler = this.state.storeNameChangeHandler.bind(this);
+        this.state.friendlyIdChangeHandler = this.state.friendlyIdChangeHandler.bind(this);
+    }
+
+    generateFriendlyId(stringValue) {
+        let result = stringValue.toLowerCase();
+        result = result.replace(/\ /g, '-');
+        result = result.replace(/\./g, '-');
+        result = result.replace(/\,/g, '-');
+
+        return result;
     }
 
     render() {
@@ -44,13 +75,11 @@ class SellerStore extends React.Component {
             <div className="container-fluid">
                 <div className="row">
                     <form onSubmit={this.state.formSubmitHandler}>
-                        <StoreBaseInfoComponent />
-                        <StoreAddressComponent />
-                        <StoreTermsAndConditionsComponent />
-                        
-                        <StoreContactInfoComponent />
-                        <StoreClassificationComponent />
-                        <StoreMediaComponent {...this.state}/>
+                        <StoreBaseInfoComponent {...this.state}/>
+                        <StoreAddressComponent {...this.state}/>
+                        <StoreTermsAndConditionsComponent {...this.state}/>
+                        <StoreContactInfoComponent {...this.state}/>
+                        <StoreClassificationComponent {...this.state}/>
 
                         <div className="col-sm-12">
                             <hr/>
@@ -77,38 +106,42 @@ class StoreBaseInfoComponent extends React.Component {
                 <h3>Basic Info</h3>
                 <div className="raw">
                     <div className="form-group col-sm-6">
-                        <label htmlFor="exampleInputEmail1">Store Title</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
+                        <label htmlFor="title">Store Title</label>
+                        <input type="text" className="form-control"
+                            id="title"
+                            value={this.props.store.title}
+                            onChange={(event) => {this.props.storeNameChangeHandler(event.target.value)}}
+                            placeholder="Enter Store title." />
 
                     </div>
                     <div className="form-group col-sm-6">
-                        <label htmlFor="exampleInputEmail1">Store Friendly ID</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
+                        <label htmlFor="friendlyId">Store Friendly ID</label>
+                        <input type="text" className="form-control"
+                            id="friendlyId"
+                            value={this.props.store.friendlyId}          
+                            onChange={(event) => {this.props.friendlyIdChangeHandler(event.target.value)}}                  
+                            placeholder="Enter Friendly Id" />
                         <small id="emailHelp" className="form-text text-muted">Friendly ID will be automatically generated. Change it if needed.</small>
                     </div>
 
                     <div className="form-group col-sm-12">
-                        <label htmlFor="exampleInputEmail1">Short Description</label>
-                        <textarea type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" >
+                        <label htmlFor="shortDescription">Short Description</label>
+                        <textarea type="text" className="form-control"
+                            id="shortDescription"
+                            value={this.props.store.shortDescription}
+                            onChange={(event) => {this.props.defaultFieldChangeHandler(event.target.value, 'shortDescription')}}
+                            placeholder="Enter Short Description" >
                         </textarea>
 
                     </div>
 
                     <div className="form-group col-sm-12">
-                        <label htmlFor="exampleInputEmail1">Long Description</label>
-                        <textarea type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" >
+                        <label htmlFor="longDescription">Long Description</label>
+                        <textarea type="text" className="form-control"
+                            id="longDescription"
+                            value={this.props.store.longDescription}
+                            onChange={(event) => {this.props.defaultFieldChangeHandler(event.target.value, 'longDescription')}}
+                            placeholder="Enter Long Description" >
                         </textarea>
 
                     </div>
@@ -133,7 +166,7 @@ class StoreTermsAndConditionsComponent extends React.Component {
                 <h3>Terms and Conditions</h3>
                 <div className="form-group col-sm-12">
                     <label htmlFor="exampleInputEmail1">Terms and Conditions</label>
-                    <textarea type="email" className="form-control"
+                    <textarea type="text" className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
                         placeholder="Enter email" >
@@ -160,40 +193,8 @@ class StoreAddressComponent extends React.Component { // Array
 
                     <div className="form-group col-sm-12">
                         <label htmlFor="exampleInputEmail1">Country</label>
-                        <input type="email" className="form-control"
+                        <input type="text" className="form-control"
                             id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                    </div>
-                    <div className="form-group col-sm-6">
-                        <label htmlFor="exampleInputEmail1">City</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                    </div>
-
-                    <div className="form-group col-sm-6">
-                        <label htmlFor="exampleInputEmail1">Street</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                    </div>
-
-                    <div className="form-group col-sm-6">
-                        <label htmlFor="exampleInputEmail1">Province</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                    </div>
-
-                    <div className="form-group col-sm-6">
-                        <label htmlFor="exampleInputEmail1">Zip</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
                             placeholder="Enter email" />
                     </div>
 
@@ -218,25 +219,8 @@ class StoreContactInfoComponent extends React.Component {
                 <div className="raw">
                     <div className="form-group col-sm-12">
                         <label htmlFor="exampleInputEmail1">Phones</label>
-                        <input type="email" className="form-control"
+                        <input type="text" className="form-control"
                             id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                    </div>
-
-                    <div className="form-group col-sm-12">
-                        <label htmlFor="exampleInputEmail1">Emails</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                    </div>
-
-                    <div className="form-group col-sm-12">
-                        <label htmlFor="exampleInputEmail1">Facebook</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
                             placeholder="Enter email" />
                     </div>
                 </div>
@@ -261,17 +245,8 @@ class StoreClassificationComponent extends React.Component {
 
                     <div className="form-group col-sm-12">
                         <label htmlFor="exampleInputEmail1">Categories</label>
-                        <input type="email" className="form-control"
+                        <input type="text" className="form-control"
                             id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter email" />
-                    </div>
-
-                    <div className="form-group col-sm-12">
-                        <label htmlFor="exampleInputEmail1">Search Keywords</label>
-                        <input type="email" className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
                             placeholder="Enter email" />
                     </div>
 
@@ -282,120 +257,120 @@ class StoreClassificationComponent extends React.Component {
     }
 }
 
-class StoreMediaComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...props
-        }
-    }
+// class StoreMediaComponent extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             ...props
+//         }
+//     }
     
-    render() {
-        return (
-            <div className="col-sm-12">
-                <h3>Upload Media</h3>
-                <input type="file" className="form-control" onChange={this.props.fileChangedHandler}/>
-                {/* <button onClick={this.props.uploadHandler} className="form-control">Upload</button> */}
+//     render() {
+//         return (
+//             <div className="col-sm-12">
+//                 <h3>Upload Store Logo</h3>
+//                 <input type="file" className="form-control" onChange={this.props.fileChangedHandler} multiple/>
+//                 {/* <button onClick={this.props.uploadHandler} className="form-control">Upload</button> */}
                 
-                    {this.state.store.media.map((media, index) => {
-                        return (
-                            <div className="col-sm-2">
-                                <img className="store-image-media" key={index} src={media.url}/>
-                            </div>
-                        )
-                    })}
+//                     {this.state.store.media.map((media, index) => {
+//                         return (
+//                             <div className="col-sm-2">
+//                                 <img className="store-image-media" key={index} src={media.url}/>
+//                             </div>
+//                         )
+//                     })}
                 
-            </div>
-        );
-    }
-}
+//             </div>
+//         );
+//     }
+// }
 
 //___________________________
 
-class StoreProductsComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...props
-        }
-    }
+// class StoreProductsComponent extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             ...props
+//         }
+//     }
 
-    render() {
-        return (
-            <div className="col-sm-6">
-                <h3>products</h3>
-            </div>
-        );
-    }
-}
+//     render() {
+//         return (
+//             <div className="col-sm-6">
+//                 <h3>products</h3>
+//             </div>
+//         );
+//     }
+// }
 
-class StoreRatingComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...props
-        }
-    }
+// class StoreRatingComponent extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             ...props
+//         }
+//     }
 
-    render() {
-        return (
-            <div className="col-sm-6">
-                <h3>rating</h3>
-            </div>
-        );
-    }
-}
+//     render() {
+//         return (
+//             <div className="col-sm-6">
+//                 <h3>rating</h3>
+//             </div>
+//         );
+//     }
+// }
 
-class StoreSalesComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...props
-        }
-    }
+// class StoreSalesComponent extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             ...props
+//         }
+//     }
 
-    render() {
-        return (
-            <div className="col-sm-6">
-                <h3>sales</h3>
-            </div>
-        );
-    }
-}
+//     render() {
+//         return (
+//             <div className="col-sm-6">
+//                 <h3>sales</h3>
+//             </div>
+//         );
+//     }
+// }
 
-class StoreFeedbackComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...props
-        }
-    }
+// class StoreFeedbackComponent extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             ...props
+//         }
+//     }
 
-    render() {
-        return (
-            <div className="col-sm-6">
-                <h3>feedback</h3>
-            </div>
-        );
-    }
-}
+//     render() {
+//         return (
+//             <div className="col-sm-6">
+//                 <h3>feedback</h3>
+//             </div>
+//         );
+//     }
+// }
 
-class StoreBusinessComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...props
-        }
-    }
+// class StoreBusinessComponent extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             ...props
+//         }
+//     }
 
-    render() {
-        return (
-            <div className="col-sm-6">
-                <h3>Business(LTD)</h3>
-            </div>
-        );
-    }
-}
+//     render() {
+//         return (
+//             <div className="col-sm-6">
+//                 <h3>Business(LTD)</h3>
+//             </div>
+//         );
+//     }
+// }
 
 export default connect(
     state => {

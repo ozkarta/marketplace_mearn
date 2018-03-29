@@ -12,7 +12,7 @@ let storeSchema = new mongoose.Schema({
   address: [Address],
   phones: [{type: String, trim: true}],
   emails: [{type: String, trim: true}],
-  facebook: [{type: String, trim: true}],
+  facebook: {type: String, trim: true},
   categories: [{type: mongoose.Schema.Types.ObjectId, ref: 'Category'}],
   keywords: [{type: String, trim: true}],
   termsAndCondition: {type: String, trim: true},
