@@ -4,11 +4,12 @@ let Media = require('./types/media.type');
 let Address = require('./types/address.type');
 
 let storeSchema = new mongoose.Schema({
+  owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   business: {type: mongoose.Schema.Types.ObjectId, ref: 'Business'},
-  title: LocalizationString,
-  friendlyId: LocalizationString,
-  shortDescription: LocalizationString,
-  longDescription: LocalizationString,
+  title: {type: String, trim: true},
+  friendlyId: {type: String, trim: true},
+  shortDescription: {type: String, trim: true},
+  longDescription: {type: String, trim: true},
   address: [Address],
   phones: [{type: String, trim: true}],
   emails: [{type: String, trim: true}],
